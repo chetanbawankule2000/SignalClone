@@ -1,11 +1,16 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, Pressable } from "react-native";
 import React from "react";
 import styles from "./styles";
+import { useNavigation } from "@react-navigation/native";
 
 const ChatRoomItem = ({ room = {} }) => {
+  const navigation = useNavigation();
   const user = room.users[1];
   return (
-    <View style={styles.container}>
+    <Pressable
+      style={styles.container}
+      onPress={() => navigation.navigate("ChatRoom", { id: room.id })}
+    >
       <Image
         source={{
           uri: user.imageUri,
@@ -24,7 +29,7 @@ const ChatRoomItem = ({ room = {} }) => {
           {room.lastMessage.content}
         </Text>
       </View>
-    </View>
+    </Pressable>
   );
 };
 
