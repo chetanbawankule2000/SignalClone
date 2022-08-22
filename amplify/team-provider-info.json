@@ -1,0 +1,20 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-signalclone-staging-100528-authRole",
+      "UnauthRoleArn": "arn:aws:iam::035607060023:role/amplify-signalclone-staging-100528-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::035607060023:role/amplify-signalclone-staging-100528-authRole",
+      "Region": "ap-south-1",
+      "DeploymentBucketName": "amplify-signalclone-staging-100528-deployment",
+      "UnauthRoleName": "amplify-signalclone-staging-100528-unauthRole",
+      "StackName": "amplify-signalclone-staging-100528",
+      "StackId": "arn:aws:cloudformation:ap-south-1:035607060023:stack/amplify-signalclone-staging-100528/f30360f0-2201-11ed-84bc-02f01403a472",
+      "AmplifyAppId": "d100x6czii0el5"
+    },
+    "categories": {
+      "auth": {
+        "SignalClone": {}
+      }
+    }
+  }
+}

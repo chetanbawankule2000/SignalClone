@@ -3,7 +3,7 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
-import { FontAwesome, Feather } from "@expo/vector-icons";
+import { FontAwesome, Feather, SimpleLineIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   NavigationContainer,
@@ -15,6 +15,7 @@ import * as React from "react";
 import { ColorSchemeName, Pressable, View, Image, Text } from "react-native";
 import { useWindowDimensions } from "react-native";
 import ChatRoomHeader from "./ChatRoomHeader";
+import { Auth } from "aws-amplify";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
@@ -83,6 +84,11 @@ function RootNavigator() {
 const HomeHeader = () => {
   const { width } = useWindowDimensions();
 
+  const logout = () => {
+    console.log("Logout");
+    Auth.signOut();
+  };
+
   return (
     <View
       style={{
@@ -121,6 +127,14 @@ const HomeHeader = () => {
       <Pressable onPress={() => {}}>
         <Feather
           name="edit-2"
+          size={24}
+          color="white"
+          style={{ marginHorizontal: 10 }}
+        />
+      </Pressable>
+      <Pressable onPress={logout}>
+        <SimpleLineIcons
+          name="logout"
           size={24}
           color="white"
           style={{ marginHorizontal: 10 }}
