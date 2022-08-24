@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Image, FlatList } from "react-native";
-import React from "react";
-
+import React, { useEffect } from "react";
+import { User } from "../src/models";
 import ChatRooms from "../assets/dummy-data/ChatRooms";
 
 import ChatRoomItem from "../components/ChatRoomItem";
@@ -12,8 +12,6 @@ const TabOneScreen = () => {
         data={ChatRooms}
         renderItem={({ item }) => <ChatRoomItem room={item} />}
       />
-      {/* <ChatRoomItem />
-      <ChatRoomItem /> */}
     </View>
   );
 };
