@@ -10,12 +10,19 @@ import React, { useState, useEffect } from "react";
 import styles from "./styles";
 import { useNavigation } from "@react-navigation/native";
 import { Auth, DataStore } from "aws-amplify";
-import { ChatroomUser, User } from "../../src/models";
+import { Chatroom, ChatroomUser, Message, User } from "../../src/models";
 
 const ChatRoomItem = ({ room = {} }) => {
   const [users, setUsers] = useState<User[]>([]);
   const [user, setUser] = useState<User | null>(null);
+  const [lastMessage, setLastMessage] = useState<Message | undefined>();
   const navigation = useNavigation();
+
+  useEffect(() => {
+    console.log("the rooms", room);
+    if (!room?.chatroomLastMessageId) return;
+    DataStore.query(Message, room.chatroomLastMessageId).then(setLastMessage);
+  }, []);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -57,10 +64,10 @@ const ChatRoomItem = ({ room = {} }) => {
       <View style={styles.rightcontainer}>
         <View style={styles.row}>
           <Text style={styles.name}>{user.name}</Text>
-          <Text style={styles.text}>{room?.lastMessage?.createdAt}</Text>
+          <Text style={styles.text}>{lastMessage?.createdAt}</Text>
         </View>
         <Text numberOfLines={1} style={styles.text}>
-          {room?.lastMessage?.content}
+          {lastMessage?.content}
         </Text>
       </View>
     </Pressable>
