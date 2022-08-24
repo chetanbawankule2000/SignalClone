@@ -1,15 +1,31 @@
 import { StyleSheet, Text, View, Image, FlatList } from "react-native";
-import React, { useEffect } from "react";
-import { User } from "../src/models";
+import React, { useEffect, useState } from "react";
+import { User, Chatroom, ChatroomUser } from "../src/models";
 import ChatRooms from "../assets/dummy-data/ChatRooms";
+import { Auth, DataStore } from "aws-amplify";
 
 import ChatRoomItem from "../components/ChatRoomItem";
 
 const TabOneScreen = () => {
+  const [chatroom, setChatroom] = useState<Chatroom[]>([]);
+
+  useEffect(() => {
+    const fetchChatrooms = async () => {
+      const authUser = await Auth.currentAuthenticatedUser();
+
+      const chatRooms = (await DataStore.query(ChatroomUser))
+        .filter(
+          (chatRoomUser) => chatRoomUser.user.id === authUser.attributes.sub
+        )
+        .map((chatroomUser) => chatroomUser.chatroom);
+      setChatroom(chatRooms);
+    };
+    fetchChatrooms();
+  }, []);
   return (
     <View style={styles.page}>
       <FlatList
-        data={ChatRooms}
+        data={chatroom}
         renderItem={({ item }) => <ChatRoomItem room={item} />}
       />
     </View>

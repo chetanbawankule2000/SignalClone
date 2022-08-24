@@ -1,11 +1,43 @@
-import { StyleSheet, Text, View, Image, Pressable } from "react-native";
-import React from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
+import React, { useState, useEffect } from "react";
 import styles from "./styles";
 import { useNavigation } from "@react-navigation/native";
+import { Auth, DataStore } from "aws-amplify";
+import { ChatroomUser, User } from "../../src/models";
 
 const ChatRoomItem = ({ room = {} }) => {
+  const [users, setUsers] = useState<User[]>([]);
+  const [user, setUser] = useState<User | null>(null);
   const navigation = useNavigation();
-  const user = room.users[1];
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const fetchedUsers = (await DataStore.query(ChatroomUser))
+        .filter((chatroomusers) => chatroomusers.chatroom.id === room.id)
+        .map((chatroomUser) => chatroomUser.user);
+
+      console.log(fetchedUsers);
+
+      setUsers(fetchedUsers);
+      const authUser = await Auth.currentAuthenticatedUser();
+      setUser(
+        fetchedUsers.find((user) => user.id !== authUser.attributes.sub) || null
+      );
+    };
+
+    fetchUsers();
+  }, []);
+
+  if (!user) {
+    return <ActivityIndicator />;
+  }
   return (
     <Pressable
       style={styles.container}
@@ -17,16 +49,18 @@ const ChatRoomItem = ({ room = {} }) => {
         }}
         style={styles.image}
       ></Image>
-      <View style={styles.badgeContainer}>
-        <Text style={styles.badgeText}>4</Text>
-      </View>
+      {!!room.newMessages && (
+        <View style={styles.badgeContainer}>
+          <Text style={styles.badgeText}>{room.newMessages}</Text>
+        </View>
+      )}
       <View style={styles.rightcontainer}>
         <View style={styles.row}>
           <Text style={styles.name}>{user.name}</Text>
           <Text style={styles.text}>{room?.lastMessage?.createdAt}</Text>
         </View>
         <Text numberOfLines={1} style={styles.text}>
-          {room.lastMessage.content}
+          {room?.lastMessage?.content}
         </Text>
       </View>
     </Pressable>
