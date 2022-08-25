@@ -67,7 +67,7 @@ function RootNavigator() {
         name="ChatRoom"
         component={ChatRoomScreen}
         options={({ route }) => ({
-          headerTitle: ChatRoomHeader,
+          headerTitle: () => <ChatRoomHeader id={route?.params?.id} />,
           headerBackTitleVisible: false,
         })}
       />

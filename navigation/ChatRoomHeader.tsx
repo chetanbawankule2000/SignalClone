@@ -5,12 +5,35 @@ import {
   Pressable,
   Image,
   useWindowDimensions,
+  ActivityIndicator,
 } from "react-native";
 import { FontAwesome, Feather } from "@expo/vector-icons";
+import { DataStore, Auth } from "aws-amplify";
+import { Chatroom, ChatroomUser } from "../src/models";
 
-const ChatRoomHeader = (props) => {
-  console.log(props);
+const ChatRoomHeader = ({ id, children }) => {
   const { width } = useWindowDimensions();
+  const [users, setUsers] = useState(null);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    if (!id) return;
+    const fetchUsers = async () => {
+      const fetchedUsers = (await DataStore.query(ChatroomUser))
+        .filter((chatroomusers) => chatroomusers.chatroom.id === id)
+        .map((chatroomUser) => chatroomUser.user);
+
+      console.log(fetchedUsers);
+
+      setUsers(fetchedUsers);
+      const authUser = await Auth.currentAuthenticatedUser();
+      setUser(
+        fetchedUsers.find((user) => user.id !== authUser.attributes.sub) || null
+      );
+    };
+
+    fetchUsers();
+  }, []);
 
   return (
     <View
@@ -24,7 +47,7 @@ const ChatRoomHeader = (props) => {
     >
       <Image
         source={{
-          uri: "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/vadim.jpg",
+          uri: user?.imageUri,
         }}
         style={{ width: 30, height: 30, borderRadius: 30 }}
       />
@@ -36,7 +59,7 @@ const ChatRoomHeader = (props) => {
           color: "white",
         }}
       >
-        {props.children}
+        {user?.name}
       </Text>
       <Pressable onPress={() => {}}>
         <Feather
