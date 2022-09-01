@@ -9,12 +9,13 @@ import {
 } from "react-native";
 import { FontAwesome, Feather } from "@expo/vector-icons";
 import { DataStore, Auth } from "aws-amplify";
-import { Chatroom, ChatroomUser } from "../src/models";
+import { Chatroom, ChatroomUser, User } from "../src/models";
+import moment from "moment";
 
 const ChatRoomHeader = ({ id, children }) => {
   const { width } = useWindowDimensions();
   const [users, setUsers] = useState(null);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -35,6 +36,19 @@ const ChatRoomHeader = ({ id, children }) => {
     fetchUsers();
   }, []);
 
+  const getLastOnlineText = () => {
+    // if last online is less than 5 min show his online
+    if (!user?.lastOnlineAt) {
+      return;
+    }
+    const lastOnlineDiff = moment().diff(moment(user?.lastOnlineAt));
+    if (lastOnlineDiff < 5 * 60 * 1000) {
+      return "online";
+    } else {
+      return `Last seen online ${moment(user.lastOnlineAt).fromNow()}`;
+    }
+  };
+
   return (
     <View
       style={{
@@ -51,16 +65,19 @@ const ChatRoomHeader = ({ id, children }) => {
         }}
         style={{ width: 30, height: 30, borderRadius: 30 }}
       />
-      <Text
-        style={{
-          flex: 1,
-          marginLeft: 10,
-          fontWeight: "bold",
-          color: "white",
-        }}
-      >
-        {user?.name}
-      </Text>
+      <View style={{ flex: 1, marginLeft: 10 }}>
+        <Text
+          style={{
+            fontWeight: "bold",
+            color: "white",
+          }}
+        >
+          {user?.name}
+        </Text>
+        <Text style={{ fontWeight: "bold", color: "white" }}>
+          {getLastOnlineText()}
+        </Text>
+      </View>
       <Pressable onPress={() => {}}>
         <Feather
           name="settings"
