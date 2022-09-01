@@ -1,6 +1,10 @@
 import { ModelInit, MutableModel, PersistentModelConstructor } from "@aws-amplify/datastore";
 
-
+export enum MessageStatus {
+  SENT = "SENT",
+  DELIVERED = "DELIVERED",
+  READ = "READ"
+}
 
 
 
@@ -27,6 +31,8 @@ export declare class Message {
   readonly chatroomID: string;
   readonly image?: string | null;
   readonly audio?: string | null;
+  readonly status?: MessageStatus | keyof typeof MessageStatus | null;
+  readonly replyToMessageID?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
   constructor(init: ModelInit<Message, MessageMetaData>);
@@ -53,6 +59,7 @@ export declare class User {
   readonly status?: string | null;
   readonly Messages?: (Message | null)[] | null;
   readonly chatrooms?: (ChatroomUser | null)[] | null;
+  readonly lastOnlineAt?: number | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
   constructor(init: ModelInit<User, UserMetaData>);

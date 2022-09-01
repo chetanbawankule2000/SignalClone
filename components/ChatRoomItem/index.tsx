@@ -19,7 +19,6 @@ const ChatRoomItem = ({ room = {} }) => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    console.log("the rooms", room);
     if (!room?.chatroomLastMessageId) return;
     DataStore.query(Message, room.chatroomLastMessageId).then(setLastMessage);
   }, []);
@@ -30,7 +29,7 @@ const ChatRoomItem = ({ room = {} }) => {
         .filter((chatroomusers) => chatroomusers.chatroom.id === room.id)
         .map((chatroomUser) => chatroomUser.user);
 
-      console.log(fetchedUsers);
+      // console.log(fetchedUsers);
 
       setUsers(fetchedUsers);
       const authUser = await Auth.currentAuthenticatedUser();

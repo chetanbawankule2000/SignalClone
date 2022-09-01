@@ -23,7 +23,7 @@ const ChatRoomHeader = ({ id, children }) => {
         .filter((chatroomusers) => chatroomusers.chatroom.id === id)
         .map((chatroomUser) => chatroomUser.user);
 
-      console.log(fetchedUsers);
+      // console.log(fetchedUsers);
 
       setUsers(fetchedUsers);
       const authUser = await Auth.currentAuthenticatedUser();

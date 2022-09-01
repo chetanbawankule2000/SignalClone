@@ -87,6 +87,7 @@ const MessageInput = ({ chatRoom }) => {
         image: key,
         userID: authUser?.attributes?.sub,
         chatroomID: chatRoom.id,
+        // status: "SENT",
       })
     );
     setResetFields();
@@ -110,6 +111,7 @@ const MessageInput = ({ chatRoom }) => {
         audio: key,
         userID: authUser?.attributes?.sub,
         chatroomID: chatRoom.id,
+        status: "SENT",
       })
     );
     setResetFields();
@@ -117,7 +119,6 @@ const MessageInput = ({ chatRoom }) => {
   };
 
   const progressCallback = (progress) => {
-    console.log("Uploaded: ", progress.loaded);
     setProgress(progress.loaded / progress.total);
   };
 
@@ -131,6 +132,7 @@ const MessageInput = ({ chatRoom }) => {
         content: message,
         userID: authUser?.attributes?.sub,
         chatroomID: chatRoom.id,
+        // status: "SENT",
       })
     );
     setResetFields();
@@ -202,12 +204,10 @@ const MessageInput = ({ chatRoom }) => {
         allowsRecordingIOS: true,
         playsInSilentModeIOS: true,
       });
-      console.log("Starting recording..");
       const { recording } = await Audio.Recording.createAsync(
         Audio.RecordingOptionsPresets.HIGH_QUALITY
       );
       setRecording(recording);
-      console.log("Recording started");
     } catch (err) {
       console.error("Failed to start recording", err);
     }
@@ -217,7 +217,6 @@ const MessageInput = ({ chatRoom }) => {
     if (!recording) {
       return;
     }
-    console.log("Stopping recording..");
     setRecording(null);
     await recording.stopAndUnloadAsync();
     await Audio.setAudioModeAsync({
@@ -225,7 +224,6 @@ const MessageInput = ({ chatRoom }) => {
     });
     const uri = recording.getURI();
     setSoundUri(uri);
-    console.log("Recording stopped and stored at", uri);
 
     if (!uri) {
       return;

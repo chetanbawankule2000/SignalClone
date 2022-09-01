@@ -40,7 +40,6 @@ const AudioPlayer = ({ soundURI }) => {
   };
 
   const getDuration = () => {
-    console.log("Audio ", audioDuration);
     const minutes = Math.floor(audioDuration / (60 * 1000));
     const seconds = Math.floor((audioDuration % (60 * 1000)) / 1000);
 

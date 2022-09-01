@@ -30,7 +30,6 @@ const ChatRoomScreen = () => {
       return;
     }
     const chatRoom = await DataStore.query(Chatroom, id);
-    console.log("the chatroom", chatRoom);
     if (!chatRoom) {
       console.error("Chatroom with this id not exist");
     } else {
@@ -40,7 +39,6 @@ const ChatRoomScreen = () => {
 
   useEffect(() => {
     const subscription = DataStore.observe(MessageModel).subscribe((msg) => {
-      console.log("subscrption", msg.model, msg.opType, msg.element);
       if (msg.model === MessageModel && msg.opType === "INSERT") {
         setMessages((existingMsg) => [msg.element, ...existingMsg]);
       }
@@ -58,7 +56,6 @@ const ChatRoomScreen = () => {
       { sort: (message) => message.createdAt(SortDirection.DESCENDING) }
     );
     setMessages(fetchedMessages);
-    console.log("fetched message ", fetchedMessages);
   };
 
   if (!chatroom) {
