@@ -25,18 +25,14 @@ import * as ImagePicker from "expo-image-picker";
 import { v4 as uuidv4 } from "uuid";
 import { Audio, AVPlaybackStatus } from "expo-av";
 import AudioPlayer from "../AudioPlayer";
-
-const MessageInput = ({ chatRoom }) => {
+import MessageComp from "../Message";
+const MessageInput = ({ chatRoom, messageReplyTo, removeMessageReplyTo }) => {
   const [message, setMessage] = useState("");
   const [authUser, setAuthUser] = useState(null);
   const [emojipickerOpen, setEmojipickerOpen] = useState(false);
   const [image, setImage] = useState(null);
   const [progress, setProgress] = useState(0);
   const [recording, setRecording] = useState<Audio.Recording | null>(null);
-  // const [sound, setSound] = useState<Audio.Sound | null>(null);
-  // const [paused, setPaused] = useState(true);
-  // const [audioProgress, setAudioProgress] = useState(0);
-  // const [audioDuration, setAudioDuration] = useState(0);
   const [soundUri, setSoundUri] = useState<String | null>(null);
 
   useEffect(() => {
@@ -87,6 +83,8 @@ const MessageInput = ({ chatRoom }) => {
         image: key,
         userID: authUser?.attributes?.sub,
         chatroomID: chatRoom.id,
+        replyToMessageID: messageReplyTo?.id,
+
         // status: "SENT",
       })
     );
@@ -112,6 +110,7 @@ const MessageInput = ({ chatRoom }) => {
         userID: authUser?.attributes?.sub,
         chatroomID: chatRoom.id,
         status: "SENT",
+        replyToMessageID: messageReplyTo?.id,
       })
     );
     setResetFields();
@@ -132,6 +131,8 @@ const MessageInput = ({ chatRoom }) => {
         content: message,
         userID: authUser?.attributes?.sub,
         chatroomID: chatRoom.id,
+        replyToMessageID: messageReplyTo?.id,
+
         // status: "SENT",
       })
     );
@@ -145,6 +146,7 @@ const MessageInput = ({ chatRoom }) => {
     setImage(null);
     setProgress(0);
     setSoundUri(null);
+    removeMessageReplyTo();
   };
 
   const updateLastMessage = async (newMessage) => {
@@ -236,6 +238,30 @@ const MessageInput = ({ chatRoom }) => {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={100}
     >
+      {messageReplyTo && (
+        <View
+          style={{
+            backgroundColor: "#f2f2f2",
+            padding: 5,
+            borderRadius: 10,
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <View style={{ flex: 1 }}>
+            <Text>Reply To:</Text>
+            <MessageComp message={messageReplyTo} />
+          </View>
+          <Pressable onPress={() => removeMessageReplyTo()}>
+            <AntDesign
+              name="close"
+              size={24}
+              color="black"
+              style={{ margin: 5 }}
+            />
+          </Pressable>
+        </View>
+      )}
       {image && (
         <View style={styles.sendImageContainer}>
           <Image

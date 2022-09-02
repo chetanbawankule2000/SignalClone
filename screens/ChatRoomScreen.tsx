@@ -13,6 +13,9 @@ import { ActivityIndicator } from "react-native";
 
 const ChatRoomScreen = () => {
   const [messages, setMessages] = useState<MessageModel[]>([]);
+  const [messageReplyTo, setMessageReplyTo] = useState<MessageModel | null>(
+    null
+  );
   const [chatroom, setChatroom] = useState<Chatroom | null>(null);
   const navigation = useNavigation();
   const route = useRoute();
@@ -66,9 +69,18 @@ const ChatRoomScreen = () => {
       <FlatList
         data={messages}
         inverted
-        renderItem={({ item }) => <Message message={item} />}
+        renderItem={({ item }) => (
+          <Message
+            message={item}
+            setMessadeReplyTo={() => setMessageReplyTo(item)}
+          />
+        )}
       />
-      <MessageInput chatRoom={chatroom} />
+      <MessageInput
+        chatRoom={chatroom}
+        messageReplyTo={messageReplyTo}
+        removeMessageReplyTo={() => setMessageReplyTo(null)}
+      />
     </SafeAreaView>
   );
 };
