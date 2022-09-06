@@ -21,6 +21,9 @@ type Chatroom @model @auth(rules: [{allow: public}]) {
   LastMessage: Message @hasOne
   Messages: [Message] @hasMany(indexName: "byChatroom", fields: ["id"])
   ChartRoomUsers: [User] @manyToMany(relationName: "ChatroomUser")
+  Admin: User @hasOne
+  name: String
+  imageUri: String
 }
 
 type User @model @auth(rules: [{allow: public}]) {

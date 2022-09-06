@@ -57,7 +57,7 @@ const MessageReply = (props) => {
     <Pressable
       style={[
         styles.container,
-        !isMe ? styles.rightContainer : styles.leftContainer,
+        isMe ? styles.rightContainer : styles.leftContainer,
         { width: soundURI ? "75%" : "auto" },
       ]}
     >
@@ -67,7 +67,7 @@ const MessageReply = (props) => {
             <S3Image
               imgKey={message.image}
               style={{
-                width: width * 0.65,
+                width: "100%",
                 aspectRatio: 4 / 3,
               }}
               resizeMode="contain"

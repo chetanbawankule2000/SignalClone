@@ -4,25 +4,26 @@ import styles from "./styles";
 import { useNavigation } from "@react-navigation/native";
 import { Chatroom, User, ChatroomUser } from "../../src/models";
 import { DataStore, Auth } from "aws-amplify";
+import { Feather } from "@expo/vector-icons";
 
-const UserItem = ({ user = {} }) => {
+const UserItem = ({ user = {}, onPress, isSelected }) => {
   const navigation = useNavigation();
 
-  const onPress = async () => {
-    // create a chat room
-    const newChatRoom = await DataStore.save(new Chatroom({ newMessages: 0 }));
+  // const onPress = async () => {
+  //   // create a chat room
+  //   const newChatRoom = await DataStore.save(new Chatroom({ newMessages: 0 }));
 
-    //connnect authenticated user to chat room
-    const authUser = await Auth.currentAuthenticatedUser();
-    const dbUser = await DataStore.query(User, authUser.attributes.sub);
+  //   //connnect authenticated user to chat room
+  //   const authUser = await Auth.currentAuthenticatedUser();
+  //   const dbUser = await DataStore.query(User, authUser.attributes.sub);
 
-    await DataStore.save(
-      new ChatroomUser({ user: dbUser, chatroom: newChatRoom })
-    );
+  //   await DataStore.save(
+  //     new ChatroomUser({ user: dbUser, chatroom: newChatRoom })
+  //   );
 
-    await DataStore.save(new ChatroomUser({ user, chatroom: newChatRoom }));
-    navigation.navigate("ChatRoom", { id: newChatRoom.id });
-  };
+  //   await DataStore.save(new ChatroomUser({ user, chatroom: newChatRoom }));
+  //   navigation.navigate("ChatRoom", { id: newChatRoom.id });
+  // };
   return (
     <Pressable style={styles.container} onPress={onPress}>
       <Image
@@ -36,6 +37,13 @@ const UserItem = ({ user = {} }) => {
           <Text style={styles.name}>{user.name}</Text>
         </View>
       </View>
+      {isSelected !== undefined && (
+        <Feather
+          name={isSelected ? "check-circle" : "circle"}
+          size={20}
+          color="#4f4f4f"
+        />
+      )}
     </Pressable>
   );
 };

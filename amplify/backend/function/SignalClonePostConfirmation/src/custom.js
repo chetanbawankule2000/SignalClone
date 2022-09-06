@@ -8,6 +8,7 @@ const tableName = process.env.USERTABLE;
 exports.handler = async (event) => {
   // insert code to be executed by your lambda trigger
   if (!event?.request?.userAttributes?.sub) {
+    console.log("No sub provides");
     return;
   }
 

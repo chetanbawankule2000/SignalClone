@@ -109,10 +109,15 @@ const Message = (props) => {
               }}
               resizeMode="contain"
             />
+            {!!message.content && (
+              <Text style={{ color: isMe ? "black" : "white" }}>
+                {message.content}
+              </Text>
+            )}
           </View>
         )}
         {soundURI && <AudioPlayer soundURI={soundURI} />}
-        {!!message.content && (
+        {!!message.content && !message.image && (
           <Text style={{ color: isMe ? "black" : "white" }}>
             {message.content}
           </Text>
@@ -124,7 +129,7 @@ const Message = (props) => {
             }
             size={16}
             color="black"
-            style={{ marginHorizontal: 5 }}
+            style={{ marginHorizontal: 5, alignSelf: "flex-end" }}
           />
         )}
       </View>

@@ -19,6 +19,7 @@ const TabOneScreen = () => {
         )
         .map((chatroomUser) => chatroomUser.chatroom);
       setChatroom(chatRooms);
+      console.log(chatRooms);
     };
     fetchChatrooms();
   }, []);

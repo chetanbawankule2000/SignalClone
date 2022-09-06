@@ -51,7 +51,7 @@ const ChatRoomItem = ({ room = {} }) => {
     >
       <Image
         source={{
-          uri: user.imageUri,
+          uri: room.imageUri || user.imageUri,
         }}
         style={styles.image}
       ></Image>
@@ -62,7 +62,7 @@ const ChatRoomItem = ({ room = {} }) => {
       )}
       <View style={styles.rightcontainer}>
         <View style={styles.row}>
-          <Text style={styles.name}>{user.name}</Text>
+          <Text style={styles.name}>{room.name || user.name}</Text>
           <Text style={styles.text}>{lastMessage?.createdAt}</Text>
         </View>
         <Text numberOfLines={1} style={styles.text}>

@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
           alignSelf:'flex-end'
     },
     row:{
-        flexDirection:'row',
+        // flexDirection:'row',
         alignSelf:'flex-end'
     },
     messagereply:{

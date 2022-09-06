@@ -16,25 +16,34 @@ const ChatRoomHeader = ({ id, children }) => {
   const { width } = useWindowDimensions();
   const [users, setUsers] = useState(null);
   const [user, setUser] = useState<User | null>(null);
+  const [chatRoom, setChatRoom] = useState<Chatroom | null>(null);
+
+  const fetchUsers = async () => {
+    const fetchedUsers = (await DataStore.query(ChatroomUser))
+      .filter((chatroomusers) => chatroomusers.chatroom.id === id)
+      .map((chatroomUser) => chatroomUser.user);
+
+    // console.log(fetchedUsers);
+
+    setUsers(fetchedUsers);
+    const authUser = await Auth.currentAuthenticatedUser();
+    setUser(
+      fetchedUsers.find((user) => user.id !== authUser.attributes.sub) || null
+    );
+  };
+
+  const fetchChatroom = async () => {
+    await DataStore.query(Chatroom, id).then(setChatRoom);
+  };
 
   useEffect(() => {
     if (!id) return;
-    const fetchUsers = async () => {
-      const fetchedUsers = (await DataStore.query(ChatroomUser))
-        .filter((chatroomusers) => chatroomusers.chatroom.id === id)
-        .map((chatroomUser) => chatroomUser.user);
-
-      // console.log(fetchedUsers);
-
-      setUsers(fetchedUsers);
-      const authUser = await Auth.currentAuthenticatedUser();
-      setUser(
-        fetchedUsers.find((user) => user.id !== authUser.attributes.sub) || null
-      );
-    };
 
     fetchUsers();
+    fetchChatroom();
   }, []);
+
+  const isGroup = users?.length > 2;
 
   const getLastOnlineText = () => {
     // if last online is less than 5 min show his online
@@ -49,6 +58,10 @@ const ChatRoomHeader = ({ id, children }) => {
     }
   };
 
+  const getUserNames = () => {
+    return users.map((user) => user.name).join(",");
+  };
+
   return (
     <View
       style={{
@@ -61,7 +74,7 @@ const ChatRoomHeader = ({ id, children }) => {
     >
       <Image
         source={{
-          uri: user?.imageUri,
+          uri: chatRoom?.imageUri ? chatRoom.imageUri : user?.imageUri,
         }}
         style={{ width: 30, height: 30, borderRadius: 30 }}
       />
@@ -72,10 +85,10 @@ const ChatRoomHeader = ({ id, children }) => {
             color: "white",
           }}
         >
-          {user?.name}
+          {chatRoom?.name ? chatRoom.name : user?.name}
         </Text>
-        <Text style={{ fontWeight: "bold", color: "white" }}>
-          {getLastOnlineText()}
+        <Text numberOfLines={1} style={{ fontWeight: "bold", color: "white" }}>
+          {isGroup ? getUserNames() : getLastOnlineText()}
         </Text>
       </View>
       <Pressable onPress={() => {}}>
