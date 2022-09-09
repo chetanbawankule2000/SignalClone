@@ -16,7 +16,7 @@ import * as React from "react";
 import { ColorSchemeName, Pressable, View, Image, Text } from "react-native";
 import { useWindowDimensions } from "react-native";
 import ChatRoomHeader from "./ChatRoomHeader";
-import { Auth } from "aws-amplify";
+import { Auth, DataStore } from "aws-amplify";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
@@ -25,6 +25,7 @@ import NotFoundScreen from "../screens/NotFoundScreen";
 import TabOneScreen from "../screens/HomeScreen";
 import TabTwoScreen from "../screens/TabTwoScreen";
 import UsersScreen from "../screens/UsersScreen";
+import GroupInfoScreen from "../screens/GroupInfoScreen";
 
 import ChatRoomScreen from "../screens/ChatRoomScreen";
 import {
@@ -71,6 +72,7 @@ function RootNavigator() {
           headerBackTitleVisible: false,
         })}
       />
+      <Stack.Screen name="GroupInfoScreen" component={GroupInfoScreen} />
       <Stack.Screen
         name="UsersScreen"
         component={UsersScreen}
@@ -94,8 +96,9 @@ const HomeHeader = (props) => {
   const { width } = useWindowDimensions();
   const navigation = useNavigation();
 
-  const logout = () => {
+  const logout = async () => {
     console.log("Logout");
+    await DataStore.clear();
     Auth.signOut();
   };
 

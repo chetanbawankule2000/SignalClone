@@ -6,7 +6,13 @@ import { Chatroom, User, ChatroomUser } from "../../src/models";
 import { DataStore, Auth } from "aws-amplify";
 import { Feather } from "@expo/vector-icons";
 
-const UserItem = ({ user = {}, onPress, isSelected }) => {
+const UserItem = ({
+  user = {},
+  onPress,
+  isSelected,
+  isAdmin = false,
+  onLongPress,
+}) => {
   const navigation = useNavigation();
 
   // const onPress = async () => {
@@ -25,7 +31,11 @@ const UserItem = ({ user = {}, onPress, isSelected }) => {
   //   navigation.navigate("ChatRoom", { id: newChatRoom.id });
   // };
   return (
-    <Pressable style={styles.container} onPress={onPress}>
+    <Pressable
+      style={styles.container}
+      onPress={onPress}
+      onLongPress={onLongPress}
+    >
       <Image
         source={{
           uri: user.imageUri,
@@ -33,9 +43,8 @@ const UserItem = ({ user = {}, onPress, isSelected }) => {
         style={styles.image}
       ></Image>
       <View style={styles.rightcontainer}>
-        <View style={styles.row}>
-          <Text style={styles.name}>{user.name}</Text>
-        </View>
+        <Text style={styles.name}>{user.name}</Text>
+        {isAdmin && <Text style={{ color: "white" }}>admin</Text>}
       </View>
       {isSelected !== undefined && (
         <Feather

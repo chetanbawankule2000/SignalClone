@@ -5,6 +5,7 @@ import {
   Image,
   FlatList,
   Pressable,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import ChatRooms from "../assets/dummy-data/ChatRooms";
@@ -36,7 +37,11 @@ const UsersScreen = () => {
     const authUser = await Auth.currentAuthenticatedUser();
     const dbUser = await DataStore.query(User, authUser.attributes.sub);
 
-    const newChatRoomData = { newMessages: 0, admin: dbUser };
+    if (!dbUser) {
+      Alert.alert("There was an error creating a group.");
+    }
+
+    const newChatRoomData = { newMessages: 0, Admin: dbUser };
     if (users.length > 1) {
       newChatRoomData.name = "New Group";
       newChatRoomData.imageUri =
@@ -47,7 +52,10 @@ const UsersScreen = () => {
     const newChatRoom = await DataStore.save(new Chatroom(newChatRoomData));
 
     if (dbUser) {
+      console.log("dbuset", dbUser);
       await addUsersToChatRoom(dbUser, newChatRoom);
+    } else {
+      console.log("No dbUser", authUser);
     }
 
     await Promise.all(

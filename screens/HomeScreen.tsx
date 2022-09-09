@@ -13,13 +13,16 @@ const TabOneScreen = () => {
     const fetchChatrooms = async () => {
       const authUser = await Auth.currentAuthenticatedUser();
 
+      await DataStore.query(ChatroomUser).then((data) =>
+        data.map((d) => console.log(d))
+      );
       const chatRooms = (await DataStore.query(ChatroomUser))
         .filter(
           (chatRoomUser) => chatRoomUser.user.id === authUser.attributes.sub
         )
         .map((chatroomUser) => chatroomUser.chatroom);
       setChatroom(chatRooms);
-      console.log(chatRooms);
+      console.log("chatrooms auth", authUser.attributes.sub);
     };
     fetchChatrooms();
   }, []);

@@ -11,12 +11,15 @@ import { FontAwesome, Feather } from "@expo/vector-icons";
 import { DataStore, Auth } from "aws-amplify";
 import { Chatroom, ChatroomUser, User } from "../src/models";
 import moment from "moment";
+import { useNavigation } from "@react-navigation/native";
 
 const ChatRoomHeader = ({ id, children }) => {
   const { width } = useWindowDimensions();
   const [users, setUsers] = useState(null);
   const [user, setUser] = useState<User | null>(null);
   const [chatRoom, setChatRoom] = useState<Chatroom | null>(null);
+
+  const navigation = useNavigation();
 
   const fetchUsers = async () => {
     const fetchedUsers = (await DataStore.query(ChatroomUser))
@@ -43,7 +46,7 @@ const ChatRoomHeader = ({ id, children }) => {
     fetchChatroom();
   }, []);
 
-  const isGroup = users?.length > 2;
+  const isGroup = users?.length > 1;
 
   const getLastOnlineText = () => {
     // if last online is less than 5 min show his online
@@ -62,8 +65,13 @@ const ChatRoomHeader = ({ id, children }) => {
     return users.map((user) => user.name).join(",");
   };
 
+  const openInfo = () => {
+    navigation.navigate("GroupInfoScreen", { id });
+  };
+
   return (
-    <View
+    <Pressable
+      onPress={openInfo}
       style={{
         flexDirection: "row",
         justifyContent: "space-between",
@@ -107,7 +115,7 @@ const ChatRoomHeader = ({ id, children }) => {
           style={{ marginHorizontal: 10 }}
         />
       </Pressable>
-    </View>
+    </Pressable>
   );
 };
 
