@@ -39,6 +39,11 @@ const styles = StyleSheet.create({
         borderRadius:5,
         borderColor:BLUE,
         borderRightWidth:3,
+    },
+    modaltext:{
+        fontSize:16,
+        fontWeight:'700',
+        marginVertical:5
     }
 });
 

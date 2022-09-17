@@ -46,7 +46,7 @@ const ChatRoomHeader = ({ id, children }) => {
     fetchChatroom();
   }, []);
 
-  const isGroup = users?.length > 1;
+  const isGroup = users?.length > 2;
 
   const getLastOnlineText = () => {
     // if last online is less than 5 min show his online

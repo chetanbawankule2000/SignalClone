@@ -9,6 +9,21 @@ import ChatRoomItem from "../components/ChatRoomItem";
 const TabOneScreen = () => {
   const [chatroom, setChatroom] = useState<Chatroom[]>([]);
 
+  // useEffect(() => {
+  //   const subscription = DataStore.observe(ChatroomUser).subscribe(
+  //     (chatroomuser) => {
+  //       if (
+  //         chatroomuser.model === ChatroomUser &&
+  //         chatroomuser.opType === "INSERT"
+  //       ) {
+  //         setChatroom([...chatroom, chatroomuser.element]);
+  //       }
+  //     }
+  //   );
+
+  //   return () => subscription.unsubscribe();
+  // }, []);
+
   useEffect(() => {
     const fetchChatrooms = async () => {
       const authUser = await Auth.currentAuthenticatedUser();

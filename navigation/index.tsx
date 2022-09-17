@@ -9,7 +9,6 @@ import {
   NavigationContainer,
   DefaultTheme,
   DarkTheme,
-  useNavigation,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
@@ -34,6 +33,8 @@ import {
   RootTabScreenProps,
 } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
+import Settings from "../screens/Settings";
+import { useNavigation } from "@react-navigation/native";
 
 export default function Navigation({
   colorScheme,
@@ -80,6 +81,7 @@ function RootNavigator() {
           title: "Users",
         })}
       />
+      <Stack.Screen name="Settings" component={Settings} />
       <Stack.Screen
         name="NotFound"
         component={NotFoundScreen}
@@ -129,7 +131,11 @@ const HomeHeader = (props) => {
       >
         Signal
       </Text>
-      <Pressable onPress={() => {}}>
+      <Pressable
+        onPress={() => {
+          navigation.navigate("Settings");
+        }}
+      >
         <Feather
           name="settings"
           size={24}

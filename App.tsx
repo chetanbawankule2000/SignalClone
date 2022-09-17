@@ -9,7 +9,8 @@ import Amplify, { DataStore, Hub, Auth } from "aws-amplify";
 import config from "./src/aws-exports";
 import { withAuthenticator } from "aws-amplify-react-native";
 import { Message, User } from "./src/models";
-
+import { secretbox, randomBytes, setPRNG, box } from "tweetnacl";
+import { generateKeyPair, encrypt, decrypt } from "./utils/crypto";
 Amplify.configure({
   ...config,
   Analytics: {
@@ -17,6 +18,16 @@ Amplify.configure({
   },
 });
 
+// setPRNG(PRNG);
+
+const obj = { hello: "world" };
+const pairA = generateKeyPair();
+const pairB = generateKeyPair();
+const sharedA = box.before(pairB.publicKey, pairA.secretKey);
+const sharedB = box.before(pairA.publicKey, pairB.secretKey);
+const encrypted = encrypt(sharedA, obj);
+const decrypted = decrypt(sharedB, encrypted);
+console.log(obj, encrypted, decrypted);
 const App = () => {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
@@ -100,6 +111,7 @@ const App = () => {
     return (
       <SafeAreaProvider>
         <Navigation colorScheme={colorScheme} />
+
         <StatusBar />
       </SafeAreaProvider>
     );

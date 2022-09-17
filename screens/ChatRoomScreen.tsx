@@ -6,7 +6,7 @@ import ChatRooms from "../assets/dummy-data/ChatRooms";
 import MessageInput from "../components/MessageInput";
 import { useRoute } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
-import { DataStore, SortDirection } from "aws-amplify";
+import { Auth, DataStore, SortDirection } from "aws-amplify";
 import { Message as MessageModel } from "../src/models";
 import { Chatroom } from "../src/models";
 import { ActivityIndicator } from "react-native";
@@ -53,9 +53,11 @@ const ChatRoomScreen = () => {
     if (!chatroom) {
       return;
     }
+    const authUer = await Auth.currentAuthenticatedUser();
+    const myId = authUer.attributes.sub;
     const fetchedMessages = await DataStore.query(
       MessageModel,
-      (message) => message.chatroomID("eq", chatroom?.id),
+      (message) => message.chatroomID("eq", chatroom?.id).forUserId("eq", myId),
       { sort: (message) => message.createdAt(SortDirection.DESCENDING) }
     );
     setMessages(fetchedMessages);
@@ -73,6 +75,7 @@ const ChatRoomScreen = () => {
           <Message
             message={item}
             setMessadeReplyTo={() => setMessageReplyTo(item)}
+            // onLongPress={() => deleteConfirmation(item)}
           />
         )}
       />

@@ -38,10 +38,10 @@ const GroupInfoScreen = () => {
     setUsers(fetchedUsers);
   };
 
-  const confirmDeleteUser = (user) => {
-    const authuser = Auth.currentAuthenticatedUser();
+  const confirmDeleteUser = async (user) => {
+    const authuser = await Auth.currentAuthenticatedUser();
     if (chatroom?.Admin?.id !== authuser?.attributes?.sub) {
-      Alert.alert("You are adimin you can not delete users");
+      Alert.alert("You are not adimin you can not delete users");
       return;
     }
 
